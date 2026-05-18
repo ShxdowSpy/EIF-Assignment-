@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EIF — Genshin Impact Edit</title>
+  <script>
+    history.scrollRestoration = 'manual';
+    if (location.hash) history.replaceState(null, '', location.pathname);
+    document.documentElement.style.scrollBehavior = 'auto';
+    window.scrollTo(0, 0);
+    document.documentElement.style.scrollBehavior = '';
+  </script>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --border: #1f1f1f;
+      --white: #ffffff;
+      --muted: #888888;
+      --accent: #e0e0e0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--white);
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 48px;
+      background: rgba(10, 10, 10, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--white);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--white);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 120px 48px 80px;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      animation: bounce 2s ease-in-out infinite;
+      opacity: 1;
+      transition: opacity 0.5s ease;
+    }
+
+    .scroll-indicator.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .scroll-indicator svg {
+      width: 20px;
+      height: 20px;
+      color: var(--muted);
+    }
+
+    .scroll-indicator span {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(10px); }
+    }
+
+    .hero-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 48px;
+    }
+
+    .hero-text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .hero-image {
+      flex: 0 0 auto;
+      width: clamp(400px, 56vw, 800px);
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .hero-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    .hero-image:hover img {
+      transform: scale(1.04);
+    }
+
+    .hero-label {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    .hero-title {
+      font-size: clamp(48px, 7vw, 96px);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+    }
+
+    .hero-title span {
+      color: var(--muted);
+    }
+
+    .hero-sub {
+      margin-top: 32px;
+      font-size: 14px;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 900px) {
+      .hero-inner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .hero-image {
+        width: 100%;
+      }
+    }
+
+    /* ── SECTIONS ── */
+    section {
+      padding: 96px 48px;
+      border-bottom: 1px solid var(--border);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 48px;
+    }
+
+    .section-grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 64px;
+      align-items: start;
+    }
+
+    .section-heading {
+      font-size: clamp(28px, 3vw, 40px);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      position: sticky;
+      top: 100px;
+    }
+
+    .section-body p {
+      color: var(--accent);
+      font-size: 16px;
+      line-height: 1.8;
+      margin-bottom: 20px;
+    }
+
+    .section-body p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* ── SKILLS / TAGS ── */
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 32px;
+    }
+
+    .tag {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,0.3);
+      padding: 8px 16px;
+      border-radius: 2px;
+      cursor: pointer;
+      background: var(--surface);
+      transition: background 0.2s, border-color 0.2s, transform 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      user-select: none;
+    }
+
+    .tag::after {
+      content: '+';
+      font-size: 13px;
+      opacity: 0.5;
+    }
+
+    .tag:hover {
+      background: #1e1e1e;
+      border-color: rgba(255,255,255,0.6);
+      transform: scale(1.05);
+    }
+
+    /* ── INFO MODAL ── */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .modal-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal {
+      background: var(--surface);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 6px;
+      padding: 40px 48px;
+      max-width: 520px;
+      width: 90%;
+      transform: translateY(16px);
+      transition: transform 0.25s ease;
+    }
+
+    .modal-backdrop.open .modal {
+      transform: translateY(0);
+    }
+
+    .modal-label {
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .modal-title {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 20px;
+    }
+
+    .modal-body {
+      font-size: 15px;
+      color: var(--accent);
+      line-height: 1.8;
+    }
+
+    .modal-close {
+      margin-top: 32px;
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 10px 24px;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s, transform 0.2s;
+      font-family: inherit;
+    }
+
+    .modal-close:hover {
+      border-color: rgba(255,255,255,0.4);
+      color: var(--white);
+      transform: scale(1.05);
+    }
+
+    /* ── PLACEHOLDER SECTION ── */
+    .placeholder-section {
+      padding: 96px 48px;
+      border-bottom: 1px solid var(--border);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .placeholder-block {
+      background: var(--surface);
+      border: 1px dashed var(--border);
+      border-radius: 4px;
+      padding: 64px 48px;
+      text-align: center;
+    }
+
+    .placeholder-block p {
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* ── BACK TO TOP ── */
+    .back-to-top {
+      position: fixed;
+      bottom: 40px;
+      right: 40px;
+      z-index: 200;
+      width: 44px;
+      height: 44px;
+      background: var(--white);
+      color: var(--bg);
+      border: none;
+      border-radius: 2px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease, background 0.2s;
+    }
+
+    .back-to-top.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .back-to-top:hover {
+      background: var(--accent);
+    }
+
+    .back-to-top svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* ── VIDEO SECTION ── */
+    .video-section {
+      padding: 96px 48px;
+      border-bottom: 1px solid var(--border);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* ── FOOTER / CTA ── */
+    footer {
+      padding: 96px 48px;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 40px;
+    }
+
+    .footer-label {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .footer-title {
+      font-size: clamp(32px, 4vw, 56px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      padding: 16px 40px;
+      background: var(--white);
+      color: var(--bg);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 2px;
+      transition: background 0.2s, color 0.2s, transform 0.2s;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent);
+      transform: scale(1.05);
+    }
+
+    .footer-line {
+      width: 100%;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .footer-bottom {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 8px;
+    }
+
+    .footer-bottom span {
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── CURSOR TRAIL ── */
+    #cursor-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+
+    /* ── SCROLL FADE-IN ── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── SECTION COLOURS ── */
+    .section-about  { background-color: #1a1a1a; }
+    .section-process { background-color: #000000; }
+    .section-showcase { background-color: #000; }
+
+    .showcase-bg {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .showcase-bg-iframe {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 177.78vh;
+      height: 100%;
+      min-width: 100%;
+      min-height: 56.25vw;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .showcase-bg-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .showcase-bg-cover {
+      position: absolute;
+      inset: 0;
+      background: #000;
+      z-index: 2;
+      transition: opacity 0.8s ease;
+    }
+
+    .showcase-bg-cover.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .showcase-bg .video-section {
+      position: relative;
+      z-index: 3;
+    }
+    .section-footer { background-color: #1a1a1a; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav {
+        padding: 20px 24px;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .hero, section, .placeholder-section, .video-section, footer {
+        padding-left: 24px;
+        padding-right: 24px;
+      }
+
+      .section-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .section-heading {
+        position: static;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-logo">EIF Project</a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#process">Process</a></li>
+      <li><a href="#showcase">Showcase</a></li>
+      <li><a href="teacher.html">Teacher View</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <p class="hero-label">EIF 2026 &mdash; Creative Digital Project</p>
+        <h1 class="hero-title">Genshin Impact<br /><span>Gaming Edit</span></h1>
+        <p class="hero-sub">Video Production &mdash; 2026</p>
+      </div>
+      <div class="hero-image">
+        <img src="hero-genshin.png" alt="Genshin Impact — Augured Homecoming" />
+      </div>
+    </div>
+    <div class="scroll-indicator">
+      <span>Scroll</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- CURSOR TRAIL -->
+  <canvas id="cursor-canvas"></canvas>
+
+  <!-- ABOUT -->
+  <div class="section-about">
+  <section id="about" class="fade-in">
+    <p class="section-label">01 &mdash; About the Project</p>
+    <div class="section-grid">
+      <h2 class="section-heading">What It Is About</h2>
+      <div class="section-body">
+        <p>
+          I am going to make a gaming edit on a game called Genshin Impact.
+          Genshin Impact is a fantasy, open-world action role playing game.
+          For this task I will need to find small cutscenes in the game on
+          Youtube, and then import it to CapCut, then edit the small snippets
+          of clips together to make the final product.
+        </p>
+        <p>
+          I will need to know how to match the videos to the beat, add
+          transitions to the clips, and colour grade it, all just to make
+          it entertaining and immersive to watch.
+        </p>
+        <h3 style="font-size: 13px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--white); margin-top: 32px; margin-bottom: 6px;">Learn More</h3>
+        <div class="tags">
+          <button class="tag" data-tag="Video Editing">Video Editing</button>
+          <button class="tag" data-tag="CapCut">CapCut</button>
+          <button class="tag" data-tag="Colour Grading">Colour Grading</button>
+          <button class="tag" data-tag="Beat Sync">Beat Sync</button>
+          <button class="tag" data-tag="Transitions">Transitions</button>
+          <button class="tag" data-tag="Genshin Impact">Genshin Impact</button>
+        </div>
+      </div>
+    </div>
+  </section>
+  </div>
+
+  <!-- PROCESS -->
+  <div class="section-process">
+  <section id="process" class="fade-in">
+    <p class="section-label">02 &mdash; Process &amp; Workflow</p>
+    <div class="section-grid">
+      <h2 class="section-heading">How It Works</h2>
+      <div class="section-body">
+        <p>
+          The editing process begins with sourcing high-quality cutscenes and
+          gameplay clips directly from Youtube. These clips are then imported
+          into CapCut where the real editing takes place.
+        </p>
+        <p>
+          Each clip is carefully timed to match the beat of the chosen
+          soundtrack. Transitions are applied between scenes to maintain
+          visual flow, and colour grading is used throughout to create a
+          consistent cinematic tone.
+        </p>
+        <p>
+          The goal is a final product that feels polished, dynamic, and
+          engaging to watch from start to finish.
+        </p>
+      </div>
+    </div>
+  </section>
+  </div>
+
+  <!-- SHOWCASE VIDEO -->
+  <div class="section-showcase showcase-bg">
+    <div id="showcase-yt" class="showcase-bg-iframe"></div>
+    <div style="position:absolute;inset:0;z-index:0;"></div>
+    <div class="showcase-bg-overlay"></div>
+    <div class="showcase-bg-cover" id="showcaseCover"></div>
+    <div class="video-section fade-in" id="showcase">
+      <p class="section-label">03 &mdash; Showcase</p>
+      <h2 class="section-heading" style="font-size: clamp(28px, 3vw, 40px); font-weight: 700; letter-spacing: -0.02em;">
+        Year 9 Showcase
+      </h2>
+      <a href="https://www.youtube.com/watch?v=IEbMY4c6w08" target="_blank" rel="noopener noreferrer" class="btn-primary" style="margin-top: 48px; background: #ff4444;">Watch on YouTube</a>
+    </div>
+  </div>
+
+  <!-- INFO MODAL -->
+  <div class="modal-backdrop" id="infoModal">
+    <div class="modal">
+      <p class="modal-label">About</p>
+      <h2 class="modal-title" id="modalTitle"></h2>
+      <p class="modal-body" id="modalBody"></p>
+      <button class="modal-close" id="modalClose">Close</button>
+    </div>
+  </div>
+
+  <!-- FOOTER / CTA -->
+  <div class="section-footer">
+  <footer>
+    <p class="footer-label">Teacher Resources</p>
+    <h2 class="footer-title">View the full<br />project breakdown</h2>
+    <a href="teacher.html" class="btn-primary">Open Teacher View</a>
+    <div class="footer-line"></div>
+    <div class="footer-bottom">
+      <span>EIF Project &mdash; Genshin Impact Edit</span>
+      <span>2026</span>
+    </div>
+  </footer>
+  </div>
+
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="3 10 8 5 13 10"/>
+    </svg>
+  </button>
+
+  <script>
+    // Smooth scroll nav links without putting hash in URL
+    document.querySelectorAll('a[href^="#"]').forEach(function (link) {
+      link.addEventListener('click', function (e) {
+        e.preventDefault();
+        var target = document.querySelector(this.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+
+    const btn = document.getElementById('backToTop');
+    const scrollIndicator = document.querySelector('.scroll-indicator');
+    window.addEventListener('scroll', () => {
+      btn.classList.toggle('visible', window.scrollY > 300);
+      scrollIndicator.classList.toggle('hidden', window.scrollY > 80);
+    });
+    btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    // Cursor trail
+    const canvas = document.getElementById('cursor-canvas');
+    const ctx = canvas.getContext('2d');
+    const trail = [];
+    const LIFETIME = 500;
+
+    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    resize();
+    window.addEventListener('resize', resize);
+
+    document.addEventListener('mousemove', e => {
+      trail.push({ x: e.clientX, y: e.clientY, t: Date.now() });
+    });
+
+    (function drawTrail() {
+      const now = Date.now();
+      // Remove points older than LIFETIME
+      while (trail.length && now - trail[0].t > LIFETIME) trail.shift();
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (trail.length > 2) {
+        for (let i = 1; i < trail.length - 1; i++) {
+          const age = now - trail[i].t;
+          const alpha = Math.max(0, 1 - age / LIFETIME);
+          const midX = (trail[i].x + trail[i + 1].x) / 2;
+          const midY = (trail[i].y + trail[i + 1].y) / 2;
+          const prevMidX = (trail[i - 1].x + trail[i].x) / 2;
+          const prevMidY = (trail[i - 1].y + trail[i].y) / 2;
+          ctx.beginPath();
+          ctx.moveTo(prevMidX, prevMidY);
+          ctx.quadraticCurveTo(trail[i].x, trail[i].y, midX, midY);
+          ctx.strokeStyle = `rgba(255,255,255,${alpha})`;
+          ctx.lineWidth = alpha * 4;
+          ctx.lineCap = 'round';
+          ctx.lineJoin = 'round';
+          ctx.stroke();
+        }
+      }
+      requestAnimationFrame(drawTrail);
+    })();
+
+    // YouTube background loop 0:05 – 0:40
+    var ytTag = document.createElement('script');
+    ytTag.src = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(ytTag);
+
+    var showcasePlayer;
+    window.onYouTubeIframeAPIReady = function() {
+      showcasePlayer = new YT.Player('showcase-yt', {
+        videoId: 'IEbMY4c6w08',
+        playerVars: {
+          autoplay: 1, mute: 1, controls: 0,
+          showinfo: 0, rel: 0, modestbranding: 1,
+          start: 5, end: 40, playsinline: 1
+        },
+        events: {
+          onReady: function(e) {
+            e.target.playVideo();
+            setTimeout(function() {
+              document.getElementById('showcaseCover').classList.add('hidden');
+            }, 300);
+          },
+          onStateChange: function(e) {
+            if (e.data === YT.PlayerState.ENDED) {
+              var cover = document.getElementById('showcaseCover');
+              cover.style.transition = 'none';
+              cover.style.opacity = '1';
+              cover.style.pointerEvents = 'auto';
+              e.target.seekTo(5, true);
+              e.target.playVideo();
+              setTimeout(function() {
+                cover.style.transition = 'opacity 0.6s ease';
+                cover.style.opacity = '0';
+                cover.style.pointerEvents = 'none';
+              }, 400);
+            }
+          }
+        }
+      });
+    };
+
+    setInterval(function() {
+      if (showcasePlayer && showcasePlayer.getCurrentTime && showcasePlayer.getCurrentTime() >= 40) {
+        var cover = document.getElementById('showcaseCover');
+        cover.style.transition = 'none';
+        cover.style.opacity = '1';
+        cover.style.pointerEvents = 'auto';
+        showcasePlayer.seekTo(5, true);
+        showcasePlayer.playVideo();
+        setTimeout(function() {
+          cover.style.transition = 'opacity 0.6s ease';
+          cover.style.opacity = '0';
+          cover.style.pointerEvents = 'none';
+        }, 400);
+      }
+    }, 500);
+
+    // Tag modals
+    const tagInfo = {
+      'Video Editing': 'Video editing is the process of taking raw, unpolished video clips and piecing them together to tell a story. It involves trimming out mistakes, arranging the best clips in order, and adding extras like music, sound effects, text, and visual transitions to create an immersive and engaging video.',
+      'CapCut': 'CapCut is a free, all-in-one video editing app developed by ByteDance (the creators of TikTok). It is designed to be highly accessible and beginner-friendly, allowing anyone to easily trim clips, add music, and apply text or effects to videos.',
+      'Colour Grading': 'Colour grading is the process of altering the colours and contrast of a photo or video to create a specific mood, style, or visual tone.',
+      'Beat Sync': 'Beat syncing is the process of adjusting the speed and rhythm of two songs so they play at the exact same tempo and align perfectly.',
+      'Transitions': 'Transitions typically refer to video effects or techniques that connect two different scenes, clips, or ideas together, ensuring the content flows nice and smoothly.',
+      'Genshin Impact': 'Genshin Impact is a free-to-play, open-world action role-playing game (RPG). You play as a traveling hero from another world, exploring a vast, magical fantasy land to find your lost twin.'
+    };
+
+    const modal = document.getElementById('infoModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBody = document.getElementById('modalBody');
+    const modalClose = document.getElementById('modalClose');
+
+    document.querySelectorAll('.tag').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const key = btn.dataset.tag;
+        modalTitle.textContent = key;
+        modalBody.textContent = tagInfo[key];
+        modal.classList.add('open');
+      });
+    });
+
+    modalClose.addEventListener('click', () => modal.classList.remove('open'));
+    modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') modal.classList.remove('open'); });
+
+    // Scroll fade-in
+    const fadeEls = document.querySelectorAll('.fade-in');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    fadeEls.forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>

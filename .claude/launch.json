@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Static Site (Python)",
+      "runtimeExecutable": "/opt/homebrew/bin/python3",
+      "runtimeArgs": [".claude/serve.py"],
+      "port": 3000
+    }
+  ]
+}

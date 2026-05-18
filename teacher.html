@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EIF — Teacher View</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --border: #1f1f1f;
+      --white: #ffffff;
+      --muted: #888888;
+      --accent: #e0e0e0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--white);
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 48px;
+      background: rgba(10, 10, 10, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--white);
+      text-decoration: none;
+    }
+
+    .nav-back {
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      transition: color 0.2s;
+    }
+
+    .nav-back:hover {
+      color: var(--white);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 50vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 120px 48px 64px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-label {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    .hero-title {
+      font-size: clamp(40px, 6vw, 80px);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+    }
+
+    .hero-title span {
+      color: var(--muted);
+    }
+
+    /* ── SECTIONS ── */
+    section {
+      padding: 96px 48px;
+      border-bottom: 1px solid var(--border);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 48px;
+    }
+
+    /* ── TIMELINE ── */
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 40px;
+      padding: 40px 0;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+
+    .timeline-item:last-child {
+      border-bottom: none;
+    }
+
+    .timeline-left {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .timeline-day {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .timeline-date {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+
+    .timeline-status {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 2px;
+      width: fit-content;
+      margin-top: 4px;
+    }
+
+    .timeline-status.done {
+      border-color: #ffffff30;
+      color: var(--white);
+    }
+
+    .timeline-right h3 {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      margin-bottom: 12px;
+    }
+
+    .timeline-right p {
+      font-size: 15px;
+      color: var(--accent);
+      line-height: 1.7;
+    }
+
+    /* ── QUESTIONS ── */
+    .questions {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .question-item {
+      padding: 48px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .question-item:last-child {
+      border-bottom: none;
+    }
+
+    .question-number {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .question-text {
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      margin-bottom: 24px;
+      line-height: 1.3;
+    }
+
+    .answer-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 28px 32px;
+    }
+
+    .answer-block p {
+      color: var(--accent);
+      font-size: 15px;
+      line-height: 1.8;
+    }
+
+    .answer-placeholder {
+      background: var(--surface);
+      border: 1px dashed var(--border);
+      border-radius: 4px;
+      padding: 28px 32px;
+    }
+
+    .answer-placeholder p {
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 64px 48px;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .footer-line {
+      width: 100%;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-bottom span {
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    .btn-outline {
+      display: inline-block;
+      padding: 14px 32px;
+      border: 1px solid var(--border);
+      color: var(--white);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 2px;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .btn-outline:hover {
+      background: var(--surface);
+      border-color: #ffffff30;
+    }
+
+    /* ── PASSWORD GATE ── */
+    #gate {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      padding: 48px;
+    }
+
+    #gate h2 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    #gate p {
+      font-size: 13px;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    #gate-form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      max-width: 320px;
+    }
+
+    .input-wrap {
+      position: relative;
+      width: 100%;
+    }
+
+    #gate-input {
+      width: 100%;
+      padding: 14px 44px 14px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      color: var(--white);
+      font-size: 15px;
+      font-family: inherit;
+      outline: none;
+      letter-spacing: 0.1em;
+    }
+
+    #gate-input:focus {
+      border-color: #ffffff40;
+    }
+
+    #toggle-pw {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      transition: color 0.2s;
+    }
+
+    #toggle-pw:hover {
+      color: var(--white);
+    }
+
+    #toggle-pw svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    #gate-error {
+      font-size: 12px;
+      color: #ff6b6b;
+      letter-spacing: 0.05em;
+      min-height: 16px;
+    }
+
+    #gate-submit {
+      width: 100%;
+      padding: 14px;
+      background: var(--white);
+      color: var(--bg);
+      border: none;
+      border-radius: 2px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.2s;
+    }
+
+    #gate-submit:hover {
+      background: var(--accent);
+    }
+
+    #gate-back {
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      transition: color 0.2s;
+    }
+
+    #gate-back:hover {
+      color: var(--white);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav {
+        padding: 20px 24px;
+      }
+
+      .hero, section, footer {
+        padding-left: 24px;
+        padding-right: 24px;
+      }
+
+      .timeline-item {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .timeline-date {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PASSWORD GATE -->
+  <div id="gate">
+    <h2>Teacher Access</h2>
+    <p>Enter the password to continue</p>
+    <form id="gate-form" onsubmit="checkPassword(event)">
+      <div class="input-wrap">
+        <input id="gate-input" type="password" placeholder="Password" autocomplete="off" />
+        <button type="button" id="toggle-pw" aria-label="Toggle password visibility" onclick="togglePw()">
+          <svg id="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </button>
+      </div>
+      <p id="gate-error"></p>
+      <button id="gate-submit" type="submit">Enter</button>
+    </form>
+    <a href="index.html" id="gate-back">← Back to main page</a>
+  </div>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-logo">EIF Project</a>
+    <span style="font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #ff4444; border: 1px solid #ff444440; padding: 5px 12px; border-radius: 2px; font-weight: 700;">Teacher's Only</span>
+    <a href="index.html" class="nav-back">Back to Main</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <p class="hero-label">Teacher Resources</p>
+    <h1 class="hero-title">Task<br /><span>Components</span></h1>
+    <p style="margin-top: 24px; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted);">327 Words</p>
+  </div>
+
+  <!-- TIMELINE -->
+  <section id="timeline">
+    <p class="section-label">01 &mdash; Timeline</p>
+    <div class="answer-placeholder">
+      <p>Screenshot coming soon</p>
+    </div>
+  </section>
+
+  <!-- STRATEGIC PLAN -->
+  <section id="plan">
+    <p class="section-label">Strategic Action Plan</p>
+    <div class="section-grid" style="display: flex; flex-direction: column; gap: 32px;">
+      <div class="answer-block">
+        <p>My strategic action plan for this EIF project centres on producing a polished Genshin Impact gaming edit that reflects my creative identity and interest in digital media.</p>
+        <br />
+        <p><strong style="color: var(--white);">Goal</strong><br />The primary goal is to complete and publish a high-quality Genshin Impact gaming edit by Week 6, demonstrating skills in video editing, beat synchronisation, colour grading, and transitions that communicate my passion for gaming culture and visual storytelling.</p>
+        <br />
+        <p><strong style="color: var(--white);">Timeline</strong><br />
+        Week 1 — Research editing styles and gather inspiration. Source high-quality cutscenes and gameplay footage from YouTube, and select a soundtrack that matches the tone I want to achieve.<br /><br />
+        Week 2 — Import all footage into CapCut and begin the rough cut. Arrange clips in sequence and sync cuts to the beat of the chosen track.<br /><br />
+        Week 3 — Refine the edit by adding transitions between clips to maintain smooth visual flow. Apply colour grading to establish a consistent cinematic aesthetic throughout.<br /><br />
+        Week 4 — Review the full edit and make final adjustments. Gather peer feedback and incorporate any meaningful improvements.<br /><br />
+        Week 5 — Apply final refinements based on feedback. Polish any remaining transitions, colour grading, or timing issues to bring the edit to a finished standard.<br /><br />
+        Week 6 — Export the final product and prepare for the Year 9 showcase presentation.</p>
+        <br />
+        <p><strong style="color: var(--white);">Resources Needed</strong><br />CapCut (free editing software), YouTube (source of footage and cutscenes), a computer with sufficient processing power, reference edits from other creators for stylistic inspiration, and peer feedback during the review phase.</p>
+        <br />
+        <p><strong style="color: var(--white);">Identity and Future</strong><br />This project connects to my identity as someone with a strong interest in gaming culture and creative digital expression. By completing this edit I am developing real-world video production skills transferable to future pathways in media, content creation, or digital design. Planning, executing, and refining a creative product mirrors professional workflows and builds the discipline needed for future creative pursuits.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- EVIDENCE OF WORK -->
+  <section id="evidence">
+    <p class="section-label">02 &mdash; Evidence of Work</p>
+    <img src="CapCut.png" alt="CapCut editing timeline" style="width: 100%; border-radius: 4px; border: 1px solid var(--border); display: block;" />
+  </section>
+
+  <!-- QUESTIONS -->
+  <section id="questions">
+    <div class="questions">
+
+      <div class="question-item">
+        <p class="question-number">Question 01</p>
+        <p class="question-text">Explain how my actions support the goal?</p>
+        <div class="answer-block">
+          <p>The final objective in this task would be planning, designing, and releasing the Genshin Impact edit as a completed piece. Each action that I undertake throughout the timeline is directly related to achieving the goal, whereby in the first weeks, the collection of clips forms the basis of footage used, and in the second weeks, editing skills are refined for better results, and finally, by Week 5, I will have feedback for the video before release. All these steps were not taken randomly but they all lead to the final product.</p>
+        </div>
+      </div>
+
+      <div class="question-item">
+        <p class="question-number">Question 02</p>
+        <p class="question-text">What it is about and what I need to know?</p>
+        <div class="answer-block">
+          <p>I am going to make a gaming edit on a game called Genshin Impact. Genshin Impact is a fantasy, open-world action role playing game. For this task I will need to find small cutscenes in the game on Youtube, and then import it to capcut, then edit the small snippets of clips together to make the final product. I will need to know how to match the videos to the beat, add transitions to the clips, and colour grade it, all just to make it entertaining and immersive to watch.</p>
+        </div>
+      </div>
+
+      <div class="question-item">
+        <p class="question-number">Question 03</p>
+        <p class="question-text">How did you ensure the final product was engaging for the audience?</p>
+        <div class="answer-block">
+          <p>I ensured that the final product was engaging by adding special effects, smooth transitions, colour grading all for the immersion of the edit. The clips also have been picked to catch the viewers attention and keep them hooked to the video.</p>
+        </div>
+      </div>
+
+      <div class="question-item">
+        <p class="question-number">Question 04</p>
+        <p class="question-text">What did you learn from this EIF project?</p>
+        <div class="answer-block">
+          <p>Some things that I learned from doing this experience was firstly, was a lot of practical skills on how to edit videos such as colour grading, transitions, special effects, beat syncing which I had little experience with. Beyond the practical skills, this project taught me how to select the right footage for the right moments to create a miniature story in the edit. These skills will definitely help me in the future and also I gained a better understanding of my identity, as someone who likes gaming and video editing.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- REFLECTION -->
+  <section id="reflection">
+    <p class="section-label">Reflection</p>
+    <div class="answer-placeholder">
+      <p>Reflection to be added</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-line"></div>
+    <div class="footer-bottom">
+      <span>EIF Project &mdash; Teacher View</span>
+      <a href="index.html" class="btn-outline">Back to Main Page</a>
+    </div>
+  </footer>
+
+  <script>
+    function togglePw() {
+      var input = document.getElementById('gate-input');
+      var icon = document.getElementById('eye-icon');
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>';
+      } else {
+        input.type = 'password';
+        icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+      }
+    }
+
+    var gate = document.getElementById('gate');
+    if (sessionStorage.getItem('teacher-auth') === 'yes') {
+      gate.style.display = 'none';
+    }
+    function checkPassword(e) {
+      e.preventDefault();
+      var val = document.getElementById('gate-input').value;
+      if (val === 'seaford26') {
+        sessionStorage.setItem('teacher-auth', 'yes');
+        gate.style.display = 'none';
+      } else {
+        document.getElementById('gate-error').textContent = 'Incorrect password';
+        document.getElementById('gate-input').value = '';
+      }
+    }
+  </script>
+</body>
+</html>
