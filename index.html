@@ -234,7 +234,7 @@
 
     .section-body p {
       color: var(--accent);
-      font-size: 16px;
+      font-size: 18px;
       line-height: 1.8;
       margin-bottom: 20px;
     }
@@ -487,6 +487,118 @@
       letter-spacing: 0.05em;
     }
 
+    /* ── VIDEO MODAL ── */
+    .video-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 600;
+      background: rgba(0,0,0,0.92);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .video-modal-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .video-modal-inner {
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .video-modal-header {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 12px;
+    }
+
+    .video-modal-close-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 8px 20px;
+      border-radius: 2px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .video-modal-close-btn:hover {
+      border-color: rgba(255,255,255,0.4);
+      color: var(--white);
+    }
+
+    .video-modal-player-wrap {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      background: #000;
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .video-modal-player-wrap iframe {
+      position: absolute;
+      inset: 0;
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    .video-modal-feedback {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 64px 48px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      gap: 16px;
+    }
+
+    .video-modal-feedback p {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .video-modal-feedback h3 {
+      font-size: clamp(22px, 3vw, 36px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .video-modal-feedback .btn-primary {
+      margin-top: 8px;
+    }
+
+    .video-modal-skip {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      font-family: inherit;
+      margin-top: 4px;
+      transition: color 0.2s;
+    }
+
+    .video-modal-skip:hover { color: var(--white); }
+
     /* ── CURSOR TRAIL ── */
     #cursor-canvas {
       position: fixed;
@@ -593,6 +705,7 @@
       <li><a href="#process">Process</a></li>
       <li><a href="#showcase">Showcase</a></li>
       <li><a href="teacher.html">Teacher View</a></li>
+      <li><a href="feedback.html">Feedback</a></li>
     </ul>
   </nav>
 
@@ -690,7 +803,23 @@
       <h2 class="section-heading" style="font-size: clamp(28px, 3vw, 40px); font-weight: 700; letter-spacing: -0.02em;">
         Year 9 Showcase
       </h2>
-      <a href="https://www.youtube.com/watch?v=IEbMY4c6w08" target="_blank" rel="noopener noreferrer" class="btn-primary" style="margin-top: 48px; background: #ff4444;">Watch on YouTube</a>
+      <button class="btn-primary" id="watchVideoBtn" style="margin-top: 48px; background: #ff4444; border: none; cursor: pointer; font-family: inherit;">Watch Full Video</button>
+    </div>
+  </div>
+
+  <!-- VIDEO MODAL -->
+  <div class="video-modal-backdrop" id="videoModal">
+    <div class="video-modal-inner">
+      <div class="video-modal-header">
+        <button class="video-modal-close-btn" id="videoModalClose">&#x2715; Close</button>
+      </div>
+      <div class="video-modal-player-wrap" id="watchPlayerWrap">
+        <div id="watch-yt"></div>
+      </div>
+      <div class="video-modal-feedback" id="videoFeedbackPrompt">
+        <h3>Taking you to the feedback form&hellip;</h3>
+        <p id="redirectCountdown"></p>
+      </div>
     </div>
   </div>
 
@@ -789,7 +918,11 @@
     document.head.appendChild(ytTag);
 
     var showcasePlayer;
+    var watchPlayer = null;
+    var ytApiReady = false;
+
     window.onYouTubeIframeAPIReady = function() {
+      ytApiReady = true;
       showcasePlayer = new YT.Player('showcase-yt', {
         videoId: 'IEbMY4c6w08',
         playerVars: {
@@ -821,6 +954,9 @@
           }
         }
       });
+      if (document.getElementById('videoModal').classList.contains('open') && !watchPlayer) {
+        createWatchPlayer();
+      }
     };
 
     setInterval(function() {
@@ -866,6 +1002,73 @@
     modalClose.addEventListener('click', () => modal.classList.remove('open'));
     modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); });
     document.addEventListener('keydown', e => { if (e.key === 'Escape') modal.classList.remove('open'); });
+
+    // Video modal
+    function createWatchPlayer() {
+      watchPlayer = new YT.Player('watch-yt', {
+        width: '100%',
+        height: '100%',
+        videoId: 'IEbMY4c6w08',
+        playerVars: { autoplay: 1, controls: 1, rel: 0, modestbranding: 1 },
+        events: {
+          onStateChange: function(e) {
+            if (e.data === YT.PlayerState.ENDED) {
+              document.getElementById('watchPlayerWrap').style.display = 'none';
+              document.getElementById('videoModalClose').style.display = 'none';
+              document.getElementById('videoFeedbackPrompt').style.display = 'flex';
+              var secs = 3;
+              var cd = document.getElementById('redirectCountdown');
+              cd.textContent = 'Redirecting in ' + secs + '...';
+              var t = setInterval(function() {
+                secs--;
+                if (secs > 0) {
+                  cd.textContent = 'Redirecting in ' + secs + '...';
+                } else {
+                  clearInterval(t);
+                  window.location.href = 'feedback.html';
+                }
+              }, 1000);
+            }
+          }
+        }
+      });
+    }
+
+    function openVideoModal() {
+      document.getElementById('videoModal').classList.add('open');
+      document.getElementById('watchPlayerWrap').style.display = 'block';
+      document.getElementById('videoFeedbackPrompt').style.display = 'none';
+      document.getElementById('videoModalClose').style.display = '';
+      if (ytApiReady) {
+        if (!watchPlayer) {
+          createWatchPlayer();
+        } else {
+          watchPlayer.seekTo(0, true);
+          watchPlayer.playVideo();
+        }
+      }
+    }
+
+    function feedbackRequired() {
+      return document.getElementById('videoFeedbackPrompt').style.display === 'flex';
+    }
+
+    function closeVideoModal() {
+      if (feedbackRequired()) return;
+      document.getElementById('videoModal').classList.remove('open');
+      if (watchPlayer && watchPlayer.stopVideo) watchPlayer.stopVideo();
+    }
+
+    document.getElementById('watchVideoBtn').addEventListener('click', openVideoModal);
+    document.getElementById('videoModalClose').addEventListener('click', closeVideoModal);
+    document.getElementById('videoModal').addEventListener('click', function(e) {
+      if (e.target === this) closeVideoModal();
+    });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && document.getElementById('videoModal').classList.contains('open')) {
+        closeVideoModal();
+      }
+    });
 
     // Scroll fade-in
     const fadeEls = document.querySelectorAll('.fade-in');

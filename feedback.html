@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Feedback — EIF Project</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --border: #1f1f1f;
+      --white: #ffffff;
+      --muted: #888888;
+      --accent: #e0e0e0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--white);
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 48px;
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--white);
+      text-decoration: none;
+    }
+
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+
+    .nav-links a {
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--white); }
+    .nav-links a.active { color: var(--white); }
+
+    .page-header {
+      padding: 160px 48px 80px;
+      border-bottom: 1px solid var(--border);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .page-header-label {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    .page-header-title {
+      font-size: clamp(40px, 6vw, 80px);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+    }
+
+    .page-header-title span { color: var(--muted); }
+
+    .page-header-sub {
+      margin-top: 24px;
+      font-size: 14px;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .form-section {
+      padding: 80px 48px 40px;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .form-section-label {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 32px;
+    }
+
+    .form-wrap {
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      background: var(--surface);
+    }
+
+    .form-wrap iframe {
+      display: block;
+      width: 100%;
+      border: none;
+    }
+
+    .back-section {
+      padding: 0 48px 80px;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .back-link {
+      font-size: 13px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover { color: var(--white); }
+
+    .page-footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 48px;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .page-footer span {
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    @media (max-width: 768px) {
+      nav { padding: 20px 24px; }
+      .nav-links { display: none; }
+      .page-header, .form-section, .back-section, .page-footer {
+        padding-left: 24px;
+        padding-right: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">EIF Project</a>
+    <ul class="nav-links">
+      <li><a href="index.html#about">About</a></li>
+      <li><a href="index.html#process">Process</a></li>
+      <li><a href="index.html#showcase">Showcase</a></li>
+      <li><a href="teacher.html">Teacher View</a></li>
+      <li><a href="feedback.html" class="active">Feedback</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-header">
+    <p class="page-header-label">EIF 2026 &mdash; Feedback</p>
+    <h1 class="page-header-title">Leave Your<br /><span>Feedback</span></h1>
+    <p class="page-header-sub">Genshin Impact Edit &mdash; 2026</p>
+  </div>
+
+  <div class="form-section">
+    <p class="form-section-label">Share your thoughts on the project</p>
+    <div class="form-wrap">
+      <iframe
+        src="https://docs.google.com/forms/d/e/1FAIpQLSfj1jiOUpxvf38bzxFuYf81RpCEpb-WjWhbAdt43cg9q74BoA/viewform?embedded=true"
+        height="820"
+        frameborder="0"
+        marginheight="0"
+        marginwidth="0"
+        title="EIF Project Feedback Form"
+      >Loading form&hellip;</iframe>
+    </div>
+  </div>
+
+  <footer class="page-footer">
+    <span>EIF Project &mdash; Genshin Impact Edit</span>
+    <span>2026</span>
+  </footer>
+
+  <script>
+    var formIframe = document.querySelector('.form-wrap iframe');
+    var formLoaded = false;
+    formIframe.addEventListener('load', function() {
+      if (formLoaded) {
+        window.location.href = 'index.html';
+      }
+      formLoaded = true;
+    });
+  </script>
+</body>
+</html>
